@@ -3,3 +3,10 @@ class Joint():
         self.id = id
         self.x = x
         self.y = y
+        
+        
+    def get_y(self):
+        return self.y
+    
+    def get_x(self):
+        return self.x
