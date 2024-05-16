@@ -97,8 +97,6 @@ class Frame():
         return np.multiply(self.t_loc_glob, self.K_mat_loc)
         
         
-        
-        
     def __str__(self):
         return f"Frame: {self.id}, start joint: {self.start_joint.id} and end joint: {self.end_joint.id}. Length: {self.length}"
     
