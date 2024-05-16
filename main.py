@@ -1,5 +1,6 @@
 from entity.joint import Joint
 from entity.frame import Frame
+from entity.structure import Structure
 
 def main():
     #Sample Joints
@@ -14,7 +15,8 @@ def main():
     frame_3 = Frame(3, joint_3, joint_4, 1, 1, 1)
     
     # Print
-    print(frame_1)
+    frames = [frame_1, frame_2, frame_3]
+    structure = Structure(1, frames)
     
 if __name__ == "__main__":
     main()

@@ -3,6 +3,9 @@ class Joint():
         self.id = id
         self.x = x
         self.y = y
+        self.restriction_x = False
+        self.restriction_y = False
+        self.restriction_rot = False
         
         
     def get_y(self):
