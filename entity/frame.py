@@ -13,12 +13,18 @@ class Frame():
         self.area = area
         self.length = self.calc_length()
         self.sin = self.calc_sin()
+        print(self.sin)
         self.cos = self.calc_cos()
         
         # Create Transform Matrix Loc to Global
         self.t_loc_glob = self.create_transform_mat_loc_glob()
         print("Transform Local to Global Matrix")
         print(self.t_loc_glob)
+
+        # Transpose Transform Matrix
+        self.transpose_t_loc_glob = self.transpose_mat_t()
+        print("Transposed Transform Matrix")
+        print(self.transpose_t_loc_glob)
         # Create  Local stiffnes matrix K
         self.K_mat_loc = self.create_K_matrix_local()
         print("Local Matrix")
@@ -34,6 +40,7 @@ class Frame():
     
     def calc_sin(self):
         s = (self.end_joint.get_y() - self.start_joint.get_y()) / self.length
+        print(s)
         return s
     
     def calc_cos(self):
@@ -44,57 +51,64 @@ class Frame():
         mat_k = np.zeros((6,6))
         # Coefficients
         # First Row
-        mat_k[0,0] = self.mod_elast * self.area / self.length
-        mat_k[3,0] = - self.mod_elast * self.area / self.length
+        mat_k[0][0] = self.mod_elast * self.area / self.length
+        mat_k[0][3] = -1* self.mod_elast * self.area / self.length
         # Second Row
-        mat_k[1,1] = (12 * self.mod_elast * self.inertia) / (self.length)**3
-        mat_k[2,1] = (6 * self.mod_elast * self.inertia) / (self.length)**2
-        mat_k[4,1] = - (12 * self.mod_elast * self.inertia) / (self.length)**3
-        mat_k[5,1] = (6 * self.mod_elast * self.inertia) / (self.length)**2
+        mat_k[1][1] = (12 * self.mod_elast * self.inertia) / (self.length)**3
+        mat_k[1][2] = (6 * self.mod_elast * self.inertia) / (self.length)**2
+        mat_k[1][4] = - (12 * self.mod_elast * self.inertia) / (self.length)**3
+        mat_k[1][5] = (6 * self.mod_elast * self.inertia) / (self.length)**2
         # Third Row
-        mat_k[1,2] = (6 * self.mod_elast * self.inertia) / (self.length)**2
-        mat_k[2,2] = (4 * self.mod_elast * self.inertia) / (self.length)
-        mat_k[4,2] = - (6 * self.mod_elast * self.inertia) / (self.length)**2
-        mat_k[5,2] = (2 * self.mod_elast * self.inertia) / (self.length)
+        mat_k[2][1] = (6 * self.mod_elast * self.inertia) / (self.length)**2
+        mat_k[2][2] = (4 * self.mod_elast * self.inertia) / (self.length)
+        mat_k[2][4] = - (6 * self.mod_elast * self.inertia) / (self.length)**2
+        mat_k[2][5] = (2 * self.mod_elast * self.inertia) / (self.length)
         # Fourth Row
-        mat_k[0,3] = - self.mod_elast * self.area / self.length
-        mat_k[3,3] = self.mod_elast * self.area / self.length
+        mat_k[3][0] = - self.mod_elast * self.area / self.length
+        mat_k[3][3] = self.mod_elast * self.area / self.length
         # Fifth Row
-        mat_k[1,4] = -(12 * self.mod_elast * self.inertia) / (self.length)**3
-        mat_k[2,4] = -(6 * self.mod_elast * self.inertia) / (self.length)**2
-        mat_k[4,4] = (12 * self.mod_elast * self.inertia) / (self.length)**3
-        mat_k[5,4] = -(6 * self.mod_elast * self.inertia) / (self.length)**2
+        mat_k[4][1] = -(12 * self.mod_elast * self.inertia) / (self.length)**3
+        mat_k[4][2] = -(6 * self.mod_elast * self.inertia) / (self.length)**2
+        mat_k[4][4] = (12 * self.mod_elast * self.inertia) / (self.length)**3
+        mat_k[4][5] = -(6 * self.mod_elast * self.inertia) / (self.length)**2
         # Sixth Row
-        mat_k[1,5] = (6 * self.mod_elast * self.inertia) / (self.length)**2
-        mat_k[2,5] = (2 * self.mod_elast * self.inertia) / (self.length)
-        mat_k[4,5] = -(6 * self.mod_elast * self.inertia) / (self.length)**2
-        mat_k[5,5] = (4 * self.mod_elast * self.inertia) / (self.length)
+        mat_k[5][1] = (6 * self.mod_elast * self.inertia) / (self.length)**2
+        mat_k[5][2] = (2 * self.mod_elast * self.inertia) / (self.length)
+        mat_k[5][4] = -(6 * self.mod_elast * self.inertia) / (self.length)**2
+        mat_k[5][5] = (4 * self.mod_elast * self.inertia) / (self.length)
         
         return mat_k
         
     def create_transform_mat_loc_glob(self):
         mat_t= np.zeros((6,6))
         # First Row
-        mat_t[0,0] = self.cos
-        mat_t[1,0] = -self.sin
+        mat_t[0][0] = self.cos
+        mat_t[0][1] = - self.sin
+        print(mat_t[0][1])
         # Second Row
-        mat_t[0,1] = self.sin
-        mat_t[1,1] = self.cos
+        mat_t[1][0] = self.sin
+        mat_t[1][1] = self.cos
         # Third Row
-        mat_t[2,2] = 1
+        mat_t[2][2] = 1
         # Fourth Row
-        mat_t[3,3] = self.cos
-        mat_t[4,3] = -self.sin
+        mat_t[3][3] = self.cos
+        mat_t[3][4] = -self.sin
         # Fifth Row
-        mat_t[3,4] = self.sin
-        mat_t[4,4] = self.cos
+        mat_t[4][3] = self.sin
+        mat_t[4][4] = self.cos
         # Sixth Row
-        mat_t[5,5] = 1
+        mat_t[5][5] = 1
         
         return mat_t
     
+    def transpose_mat_t(self):
+        return np.matrix.transpose(self.t_loc_glob)
+    
     def transform_K_matrix_glob(self):
-        return np.multiply(self.t_loc_glob, self.K_mat_loc)
+        mat_1 = np.matmul(self.t_loc_glob, self.K_mat_loc)
+        print(mat_1)
+        mat_2 = np.matmul(mat_1, self.transpose_t_loc_glob)
+        return mat_2
         
         
     def __str__(self):
