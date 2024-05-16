@@ -15,8 +15,18 @@ class Frame():
         self.sin = self.calc_sin()
         self.cos = self.calc_cos()
         
+        # Create Transform Matrix Loc to Global
+        self.t_loc_glob = self.create_transform_mat_loc_glob()
+        print("Transform Local to Global Matrix")
+        print(self.t_loc_glob)
         # Create  Local stiffnes matrix K
-        self.create_K_matrix_local() 
+        self.K_mat_loc = self.create_K_matrix_local()
+        print("Local Matrix")
+        print(self.K_mat_loc)
+        # Create Global stiffnes matrix K
+        self.K_mat_glob = self.transform_K_matrix_glob()
+        print("Global Matrix")
+        print(self.K_mat_glob)
         
     def calc_length(self) -> float:
         length = math.sqrt((self.end_joint.get_y() - self.start_joint.get_y())**2 + (self.end_joint.get_x() - self.start_joint.get_x())**2)
@@ -60,8 +70,32 @@ class Frame():
         mat_k[4,5] = -(6 * self.mod_elast * self.inertia) / (self.length)**2
         mat_k[5,5] = (4 * self.mod_elast * self.inertia) / (self.length)
         
-    def create_k_mat_global(self):
-        pass
+        return mat_k
+        
+    def create_transform_mat_loc_glob(self):
+        mat_t= np.zeros((6,6))
+        # First Row
+        mat_t[0,0] = self.cos
+        mat_t[1,0] = -self.sin
+        # Second Row
+        mat_t[0,1] = self.sin
+        mat_t[1,1] = self.cos
+        # Third Row
+        mat_t[2,2] = 1
+        # Fourth Row
+        mat_t[3,3] = self.cos
+        mat_t[4,3] = -self.sin
+        # Fifth Row
+        mat_t[3,4] = self.sin
+        mat_t[4,4] = self.cos
+        # Sixth Row
+        mat_t[5,5] = 1
+        
+        return mat_t
+    
+    def transform_K_matrix_glob(self):
+        return np.multiply(self.t_loc_glob, self.K_mat_loc)
+        
         
         
         
