@@ -14,3 +14,4 @@ class Support():
         self.id = id
         self.joint = joint
         self.support_type = support_type
+        self.joint.add_restriction(self.suppport_type)
