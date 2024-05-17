@@ -8,31 +8,38 @@ class Frame():
         self.id = id
         self.start_joint = start_joint
         self.end_joint = end_joint
+        # Degrees of freedom
+        self.degrees_of_freedom = []
+        self.assign_degrees_of_freedom()
         self.mod_elast = mod_elast
         self.inertia = inertia
         self.area = area
         self.length = self.calc_length()
         self.sin = self.calc_sin()
-        print(self.sin)
+        # print(self.sin)
         self.cos = self.calc_cos()
         
         # Create Transform Matrix Loc to Global
         self.t_loc_glob = self.create_transform_mat_loc_glob()
-        print("Transform Local to Global Matrix")
-        print(self.t_loc_glob)
+        # print("Transform Local to Global Matrix")
+        # print(self.t_loc_glob)
 
         # Transpose Transform Matrix
         self.transpose_t_loc_glob = self.transpose_mat_t()
-        print("Transposed Transform Matrix")
-        print(self.transpose_t_loc_glob)
+        # print("Transposed Transform Matrix")
+        # print(self.transpose_t_loc_glob)
         # Create  Local stiffnes matrix K
         self.K_mat_loc = self.create_K_matrix_local()
-        print("Local Matrix")
-        print(self.K_mat_loc)
+        # print("Local Matrix")
+        # print(self.K_mat_loc)
         # Create Global stiffnes matrix K
         self.K_mat_glob = self.transform_K_matrix_glob()
         print("Global Matrix")
         print(self.K_mat_glob)
+
+    def assign_degrees_of_freedom(self):
+        self.degrees_of_freedom = self.start_joint.degree_freedom + self.end_joint.degree_freedom
+        print(self.degrees_of_freedom)
         
     def calc_length(self) -> float:
         length = math.sqrt((self.end_joint.get_y() - self.start_joint.get_y())**2 + (self.end_joint.get_x() - self.start_joint.get_x())**2)
@@ -40,12 +47,13 @@ class Frame():
     
     def calc_sin(self):
         s = (self.end_joint.get_y() - self.start_joint.get_y()) / self.length
-        print(s)
+        # print(s)
         return s
     
     def calc_cos(self):
         c = (self.end_joint.get_x() - self.start_joint.get_x()) / self.length
         return c
+    
     
     def create_K_matrix_local(self):
         mat_k = np.zeros((6,6))
@@ -84,7 +92,7 @@ class Frame():
         # First Row
         mat_t[0][0] = self.cos
         mat_t[0][1] = - self.sin
-        print(mat_t[0][1])
+        # print(mat_t[0][1])
         # Second Row
         mat_t[1][0] = self.sin
         mat_t[1][1] = self.cos
@@ -106,7 +114,7 @@ class Frame():
     
     def transform_K_matrix_glob(self):
         mat_1 = np.matmul(self.t_loc_glob, self.K_mat_loc)
-        print(mat_1)
+        # print(mat_1)
         mat_2 = np.matmul(mat_1, self.transpose_t_loc_glob)
         return mat_2
         
