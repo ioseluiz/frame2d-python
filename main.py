@@ -10,10 +10,11 @@ def main():
     joint_3 = Joint(3, 240, 180)
     joint_4 = Joint(4, 480, 120)
     joint_5 = Joint(5, 480, 0)
+    joints = [joint_1, joint_2, joint_3, joint_4, joint_5]
 
     # Create Supports
     support_1 = Support(id=1,joint=joint_1,support_type=SupportType.FIXED)
-    support_2 = Support(id=2, joint=joint_4, support_type=SupportType.FIXED)
+    support_2 = Support(id=2, joint=joint_5, support_type=SupportType.FIXED)
     
     # Sample Frames
     frame_1 = Frame(1, joint_1, joint_2, 29000, 272, 14.4)
@@ -23,7 +24,7 @@ def main():
     
     # Print
     frames = [frame_1, frame_2, frame_3, frame_4]
-    structure = Structure(1, frames, 5)
+    structure = Structure(1, frames, joints)
     
 if __name__ == "__main__":
     main()

@@ -8,7 +8,9 @@ class Joint():
         self.restriction_y = False
         self.restriction_rot = False
         self.degree_freedom = []
+        self.restricted_degrees_freedom = []
         self.assign_degree_freedom()
+        
         
         
     def get_y(self) -> float:

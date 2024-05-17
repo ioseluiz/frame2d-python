@@ -18,13 +18,21 @@ class Support():
 
     def add_restriction(self) -> None:
         if self.support_type == SupportType.SIMPLE_X:
-            self.self.joint.restriction_x = True
+            self.joint.restriction_x = True
+            self.joint.restricted_degrees_freedom.append(3*self.joint.id - 2)
         if self.support_type == SupportType.SIMPLE_Y:
             self.joint.restriction_y = True
+            self.joint.restricted_degrees_freedom.append(3*self.joint.id - 1)
         if self.support_type == SupportType.PINNED:
             self.joint.restriction_x = True
             self.joint.restriction_y = True
+            self.joint.restricted_degrees_freedom.append(3*self.joint.id - 2)
+            self.joint.restricted_degrees_freedom.append(3*self.joint.id - 1)
         if self.support_type == SupportType.FIXED:
             self.joint.restriction_x = True
             self.joint.restriction_y = True
             self.joint.restriction_rot = True
+            self.joint.restricted_degrees_freedom.append(3*self.joint.id - 2)
+            self.joint.restricted_degrees_freedom.append(3*self.joint.id - 1)
+            self.joint.restricted_degrees_freedom.append(3*self.joint.id)
+
